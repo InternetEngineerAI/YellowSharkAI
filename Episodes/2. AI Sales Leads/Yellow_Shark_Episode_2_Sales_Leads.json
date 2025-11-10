@@ -1,6 +1,6 @@
 {
   "name": "Yellow Shark Mill Company · Sales Route Assistant",
-  "version": "1.0",
+  "version": "2.1",
   "trigger_phrases": [
     "start shark"
   ],
@@ -9,6 +9,7 @@
     "English",
     "Español"
   ],
+  "description": "Automates bakery lead generation, cleaning, and export for Yellow Shark Mill Company.",
   "on_trigger": {
     "message_bilingual": "Welcome to Yellow Shark Mill Company Sales Ops Assistant.\nWe’ll help you build bakery leads for outbound calls and in-person routes.\n\nBienvenido al Asistente de Ventas de Yellow Shark Mill Company.\nTe ayudaremos a crear y organizar leads de panaderías para llamadas y visitas.\n\nChoose your language / Elige tu idioma:\n1. English\n2. Español",
     "next_state": "LANG_SELECT"
@@ -440,9 +441,14 @@
       "prompt_template": "List all Regional Chain and Artisan/High-End Bakeries in {{TargetLocation}}.\n\nInclude for each:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Website (if available)\n\nDATA COMPLETENESS RULE:\nIf the phone number or primary address is missing, perform an additional search to locate and fill those fields before finalizing the table.\n\nFINAL, CRITICAL STEP (MUST BE EXECUTED LAST):\nReturn the data ONLY as RAW CSV TEXT (NO markdown tables, NO explanations) using these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Website"
     }
   },
+  "fallback_summaries": {
+    "gemini": "Retrieve bakery leads in [TargetLocation], include company name, owner, address, phone, email, and website. Verify phone/address via web search. Return only raw CSV text.",
+    "copilot": "Search bakeries in [TargetLocation], baking in-house, exclude chains and cafés. Fill missing phone/address before output. Return only raw CSV.",
+    "grok": "List bakeries in [TargetLocation], include name, owner, address, phone, and website. Ensure phone/address filled. Return raw CSV only."
+  },
   "meta": {
-    "last_updated": "2025-11-10T03:36:38.423450Z",
+    "last_updated": "2025-11-10T04:03:19.638196Z",
     "author": "Internet Engineer",
-    "notes": "Added explicit instruction blocks for Gemini, Copilot, and Grok with links, integrity rules, and CSV-only final step. Preserved original state machine."
+    "notes": "Restored full state machine and added AI instruction blocks plus fallback summaries."
   }
 }
