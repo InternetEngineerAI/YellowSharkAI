@@ -1,9 +1,14 @@
 {
   "name": "Yellow Shark Mill Company · Sales Route Assistant",
   "version": "1.0",
-  "trigger_phrases": ["start shark"],
+  "trigger_phrases": [
+    "start shark"
+  ],
   "default_language": "English",
-  "supported_languages": ["English", "Español"],
+  "supported_languages": [
+    "English",
+    "Español"
+  ],
   "on_trigger": {
     "message_bilingual": "Welcome to Yellow Shark Mill Company Sales Ops Assistant.\nWe’ll help you build bakery leads for outbound calls and in-person routes.\n\nBienvenido al Asistente de Ventas de Yellow Shark Mill Company.\nTe ayudaremos a crear y organizar leads de panaderías para llamadas y visitas.\n\nChoose your language / Elige tu idioma:\n1. English\n2. Español",
     "next_state": "LANG_SELECT"
@@ -12,58 +17,144 @@
     "LANG_SELECT": {
       "type": "choice",
       "choices": {
-        "1": {"set_language": "English", "next_state": "TARGET_MARKET"},
-        "2": {"set_language": "Español", "next_state": "TARGET_MARKET"}
+        "1": {
+          "set_language": "English",
+          "next_state": "TARGET_MARKET"
+        },
+        "2": {
+          "set_language": "Español",
+          "next_state": "TARGET_MARKET"
+        }
       }
     },
     "TARGET_MARKET": {
       "prompt_en": "Which bakeries do you want to target?\n1) Regional Chain Bakeries (5–100 locations)\n2) Artisan / High-End Bakeries\n3) Both",
       "prompt_es": "¿Qué panaderías deseas targetear?\n1) Cadenas regionales (5–100 locales)\n2) Artesanales / Alta gama\n3) Ambas",
       "choices": {
-        "1": {"set": {"segment": "RegionalChain"}, "next_state": "LEAD_SOURCE"},
-        "2": {"set": {"segment": "ArtisanHighEnd"}, "next_state": "LEAD_SOURCE"},
-        "3": {"set": {"segment": "Both"}, "next_state": "LEAD_SOURCE"}
+        "1": {
+          "set": {
+            "segment": "RegionalChain"
+          },
+          "next_state": "LEAD_SOURCE"
+        },
+        "2": {
+          "set": {
+            "segment": "ArtisanHighEnd"
+          },
+          "next_state": "LEAD_SOURCE"
+        },
+        "3": {
+          "set": {
+            "segment": "Both"
+          },
+          "next_state": "LEAD_SOURCE"
+        }
       }
     },
     "LEAD_SOURCE": {
       "prompt_en": "Where should we get leads?\n1) Gemini\n2) Microsoft Copilot\n3) Grok\n4) Upload CSV",
       "prompt_es": "¿De dónde obtenemos los leads?\n1) Gemini\n2) Microsoft Copilot\n3) Grok\n4) Subir CSV",
       "choices": {
-        "1": {"set": {"source": "Gemini"}, "next_state": "CLEAN_ENRICH"},
-        "2": {"set": {"source": "Copilot"}, "next_state": "CLEAN_ENRICH"},
-        "3": {"set": {"source": "Grok"}, "next_state": "CLEAN_ENRICH"},
-        "4": {"expect_upload": true, "validate_schema": true, "preview_rows": 5, "next_state": "CLEAN_ENRICH"}
+        "1": {
+          "set": {
+            "source": "Gemini"
+          },
+          "next_state": "CLEAN_ENRICH"
+        },
+        "2": {
+          "set": {
+            "source": "Copilot"
+          },
+          "next_state": "CLEAN_ENRICH"
+        },
+        "3": {
+          "set": {
+            "source": "Grok"
+          },
+          "next_state": "CLEAN_ENRICH"
+        },
+        "4": {
+          "expect_upload": true,
+          "validate_schema": true,
+          "preview_rows": 5,
+          "next_state": "CLEAN_ENRICH"
+        }
       }
     },
     "CLEAN_ENRICH": {
       "announce_en": "Cleaning and normalizing leads.",
       "announce_es": "Limpiando y normalizando leads.",
       "actions": [
-        {"add_lead_id": "YSMC-{YYYYMMDD}-{SEQ4}"},
-        {"normalize_state_to_usps": true},
-        {"format_phone_email": true},
-        {"tag_segment_from_selection_or_keywords": true}
+        {
+          "add_lead_id": "YSMC-{YYYYMMDD}-{SEQ4}"
+        },
+        {
+          "normalize_state_to_usps": true
+        },
+        {
+          "format_phone_email": true
+        },
+        {
+          "tag_segment_from_selection_or_keywords": true
+        }
       ],
       "prompt_en": "Enrich with public contacts (Owner/Buyer/Head Baker)? (yes/no)",
       "prompt_es": "¿Enriquecer con contactos públicos (Dueño/Comprador/Maestro Panadero)? (sí/no)",
       "choices": {
-        "yes": {"perform": ["enrich_contacts_public"], "next_state": "ROUTING"},
-        "sí": {"perform": ["enrich_contacts_public"], "next_state": "ROUTING"},
-        "no": {"next_state": "ROUTING"}
+        "yes": {
+          "perform": [
+            "enrich_contacts_public"
+          ],
+          "next_state": "ROUTING"
+        },
+        "sí": {
+          "perform": [
+            "enrich_contacts_public"
+          ],
+          "next_state": "ROUTING"
+        },
+        "no": {
+          "next_state": "ROUTING"
+        }
       }
     },
     "ROUTING": {
       "prompt_en": "Generate a route? 1) Walkable  2) Driving  3) Skip",
       "prompt_es": "¿Generar ruta? 1) A pie  2) En auto  3) Omitir",
       "choices": {
-        "1": {"set": {"route_mode": "walk"}, "perform": ["geocode", "nearest_neighbor_route"], "next_state": "MAPS_LINKS"},
-        "2": {"set": {"route_mode": "drive"}, "perform": ["geocode", "nearest_neighbor_route"], "next_state": "MAPS_LINKS"},
-        "3": {"next_state": "EXPORTS"}
+        "1": {
+          "set": {
+            "route_mode": "walk"
+          },
+          "perform": [
+            "geocode",
+            "nearest_neighbor_route"
+          ],
+          "next_state": "MAPS_LINKS"
+        },
+        "2": {
+          "set": {
+            "route_mode": "drive"
+          },
+          "perform": [
+            "geocode",
+            "nearest_neighbor_route"
+          ],
+          "next_state": "MAPS_LINKS"
+        },
+        "3": {
+          "next_state": "EXPORTS"
+        }
       },
       "routing_rules": {
         "keep_first_as_start": true,
         "distance_metric": "haversine_meters",
-        "outputs": ["Latitude", "Longitude", "WalkOrder", "DistanceFromPrevMeters"]
+        "outputs": [
+          "Latitude",
+          "Longitude",
+          "WalkOrder",
+          "DistanceFromPrevMeters"
+        ]
       }
     },
     "MAPS_LINKS": {
@@ -77,11 +168,39 @@
       "prompt_en": "Choose export format(s): 1) Master CSV  2) RingOver  3) ReadyMode  4) Generic Dialer  5) All",
       "prompt_es": "Elige formato(s): 1) Master CSV  2) RingOver  3) ReadyMode  4) Dialer Genérico  5) Todos",
       "choices": {
-        "1": {"export": ["master_csv"], "next_state": "DONE"},
-        "2": {"export": ["ringover_csv"], "next_state": "DONE"},
-        "3": {"export": ["readymode_csv"], "next_state": "DONE"},
-        "4": {"export": ["generic_dialer_csv"], "next_state": "DONE"},
-        "5": {"export": ["master_csv", "ringover_csv", "readymode_csv", "generic_dialer_csv"], "next_state": "DONE"}
+        "1": {
+          "export": [
+            "master_csv"
+          ],
+          "next_state": "DONE"
+        },
+        "2": {
+          "export": [
+            "ringover_csv"
+          ],
+          "next_state": "DONE"
+        },
+        "3": {
+          "export": [
+            "readymode_csv"
+          ],
+          "next_state": "DONE"
+        },
+        "4": {
+          "export": [
+            "generic_dialer_csv"
+          ],
+          "next_state": "DONE"
+        },
+        "5": {
+          "export": [
+            "master_csv",
+            "ringover_csv",
+            "readymode_csv",
+            "generic_dialer_csv"
+          ],
+          "next_state": "DONE"
+        }
       }
     },
     "DONE": {
@@ -119,7 +238,10 @@
     ],
     "rules": {
       "lead_id_pattern": "YSMC-YYYYMMDD-SEQ4",
-      "segment_values": ["RegionalChain", "ArtisanHighEnd"],
+      "segment_values": [
+        "RegionalChain",
+        "ArtisanHighEnd"
+      ],
       "timezone_infer_from_geocode": true,
       "dnc_default": "No",
       "csv_encoding": "UTF-8",
@@ -128,7 +250,20 @@
   },
   "dialer_mappings": {
     "ringover": {
-      "headers": ["number", "name", "company", "email", "address", "city", "state", "zip", "country", "notes", "custom_1", "custom_2"],
+      "headers": [
+        "number",
+        "name",
+        "company",
+        "email",
+        "address",
+        "city",
+        "state",
+        "zip",
+        "country",
+        "notes",
+        "custom_1",
+        "custom_2"
+      ],
       "map": {
         "number": "Phone",
         "name": "concat(ContactFirst,' ',ContactLast, fallback CompanyName)",
@@ -145,7 +280,19 @@
       }
     },
     "readymode": {
-      "headers": ["phone", "first_name", "last_name", "company", "address", "city", "state", "postal_code", "country", "list_name", "notes"],
+      "headers": [
+        "phone",
+        "first_name",
+        "last_name",
+        "company",
+        "address",
+        "city",
+        "state",
+        "postal_code",
+        "country",
+        "list_name",
+        "notes"
+      ],
       "map": {
         "phone": "Phone",
         "first_name": "ContactFirst",
@@ -161,7 +308,22 @@
       }
     },
     "generic": {
-      "headers": ["phone", "company", "first_name", "last_name", "title", "email", "address", "city", "state", "zip", "country", "timezone", "notes", "external_id"],
+      "headers": [
+        "phone",
+        "company",
+        "first_name",
+        "last_name",
+        "title",
+        "email",
+        "address",
+        "city",
+        "state",
+        "zip",
+        "country",
+        "timezone",
+        "notes",
+        "external_id"
+      ],
       "map": {
         "phone": "Phone",
         "company": "CompanyName",
@@ -197,7 +359,11 @@
     ]
   },
   "validation": {
-    "dedupe_keys": ["Phone", "Website", "Address"],
+    "dedupe_keys": [
+      "Phone",
+      "Website",
+      "Address"
+    ],
     "state_format": "USPS-2",
     "email_regex": "standard",
     "phone_format": "E.164 where possible, else national format"
@@ -216,5 +382,67 @@
       "export_en": "Preparing CSV exports...",
       "export_es": "Preparando exportaciones CSV..."
     }
+  },
+  "ai_instruction_blocks": {
+    "links": {
+      "gemini": "https://gemini.google.com/",
+      "copilot": "https://copilot.microsoft.com/",
+      "grok": "https://grok.com/"
+    },
+    "gemini": {
+      "title": "Gemini Instructions (Full Data Integrity Rule)",
+      "final_critical_step": true,
+      "headers": [
+        "CompanyName",
+        "ContactName",
+        "Address",
+        "City",
+        "State",
+        "PostalCode",
+        "Country",
+        "Phone",
+        "Email",
+        "Website"
+      ],
+      "prompt_template": "Retrieve a list of Regional Chain Bakeries and Artisan/High-End Bakeries located in {{TargetLocation}}.\n\nInclude only bakeries that bake in-house and purchase flour by pallet or bulk.\nExclude supermarkets, cafés, and national chains.\n\nFor each bakery, provide:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nDATA INTEGRITY RULE:\nFor proprietary fields (Owner/Contact Person and Email), leave blank if not publicly available.\nFor public-facing fields (Address, Phone Number, Website), perform all reasonable search functions to locate and fill these fields.\nDo not leave these fields blank if they can be easily verified through a standard Google search.\n\nFINAL, CRITICAL STEP (MUST BE EXECUTED LAST):\nReturn the data ONLY as RAW CSV TEXT — no markdown tables, no summaries, no explanations — using these exact headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website"
+    },
+    "copilot": {
+      "title": "Microsoft Copilot Instructions (Partial Data Integrity Rule)",
+      "final_critical_step": true,
+      "headers": [
+        "CompanyName",
+        "ContactName",
+        "Address",
+        "City",
+        "State",
+        "PostalCode",
+        "Country",
+        "Phone",
+        "Email",
+        "Website"
+      ],
+      "prompt_template": "Search for bakeries in {{TargetLocation}} that meet these criteria:\n\n- Regional Chain (5–100 locations) or Artisan/High-End\n- Bakes in-house\nExclude grocery stores, cafés, and nationwide franchises.\n\nFor each bakery, include:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nDATA QUALITY REQUIREMENT:\nIf the phone number or primary address is missing, perform a targeted web search to complete those fields before finalizing the table.\n\nFINAL, CRITICAL STEP (MUST BE EXECUTED LAST):\nReturn the results ONLY as PLAIN CSV TEXT — no markdown formatting, no commentary — using these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website"
+    },
+    "grok": {
+      "title": "Grok Instructions (Simplified Integrity Directive)",
+      "final_critical_step": true,
+      "headers": [
+        "CompanyName",
+        "ContactName",
+        "Address",
+        "City",
+        "State",
+        "PostalCode",
+        "Country",
+        "Phone",
+        "Website"
+      ],
+      "prompt_template": "List all Regional Chain and Artisan/High-End Bakeries in {{TargetLocation}}.\n\nInclude for each:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Website (if available)\n\nDATA COMPLETENESS RULE:\nIf the phone number or primary address is missing, perform an additional search to locate and fill those fields before finalizing the table.\n\nFINAL, CRITICAL STEP (MUST BE EXECUTED LAST):\nReturn the data ONLY as RAW CSV TEXT (NO markdown tables, NO explanations) using these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Website"
+    }
+  },
+  "meta": {
+    "last_updated": "2025-11-10T03:36:38.423450Z",
+    "author": "Internet Engineer",
+    "notes": "Added explicit instruction blocks for Gemini, Copilot, and Grok with links, integrity rules, and CSV-only final step. Preserved original state machine."
   }
 }
