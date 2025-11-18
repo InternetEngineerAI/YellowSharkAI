@@ -1,0 +1,17 @@
+STEP 3 — AI LEAD INSTRUCTIONS (KNOWLEDGE FILE)
+
+GOAL:
+Generate three copy-ready AI prompts for:
+1. Gemini
+2. Copilot
+3. Grok
+
+GENERAL RULES:
+• Always display three prompts in this exact order: Gemini, Copilot, Grok.
+• Above each prompt, display the platform link:
+  Gemini → https://gemini.google.com/
+  Copilot → https://copilot.microsoft.com/
+  Grok → https://grok.com/
+• Each prompt must use its corresponding prompt_template from:
+  Yellow_Shark_Episode_2_Sales_Leads.json
+• Automatically insert the user-selected TargetLocation into each prompt. Never show {{TargetLocation}}.

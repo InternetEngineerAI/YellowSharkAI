@@ -1,0 +1,140 @@
+STEP 4 — LEAD MERGE (KNOWLEDGE FILE)
+
+GOAL:
+Guide the user through the Gemini CSV merge process and provide a copy-ready Gemini prompt
+that merges, cleans, validates, normalizes, and enriches all leads.
+
+LANGUAGE HANDLING:
+• If Language = "EN", show the English version of Step 4.
+• If Language = "ES", show the Spanish version of Step 4.
+• In BOTH languages, all technical tokens MUST remain EXACTLY as written:
+  - File output: Cleaned_Bakery_Leads_<TargetLocation>.csv
+  - Headers: LeadId, CompanyName, Segment, ContactName, Phone, Email, Website, Address, City, State, PostalCode, Country
+  - URL: https://sheets.google.com/
+  - LeadId format: YSMC-{YYYYMMDD}-{sequence}
+  - Segment values: RegionalChain, ArtisanHighEnd
+
+
+==============================================================
+IF Language = "EN" — DISPLAY THIS VERSION TO THE USER
+==============================================================
+
+Step 4 — Lead Merge
+
+Great — now upload all lead files into Gemini simultaneously.
+
+Gemini will:
+• merge them and remove duplicates
+• normalize addresses
+• validate formats
+• create Lead IDs
+
+Once Gemini merges the files, save a backup of the cleaned CSV in Google Sheets.
+Then proceed to Step 5 to either:
+• create a dialer import file, or
+• generate geolocation data for a drive / foot route.
+
+➡️ Copy-and-Paste Into Gemini (Gemini prompt to merge files)
+
+```text
+You are an AI data-cleaning and merging assistant.
+
+I will upload multiple CSV files at the same time. The number of files may vary, and their filenames may vary.
+
+Your tasks:
+
+• Detect ALL uploaded CSV files.
+• Read every CSV file uploaded simultaneously.
+• Merge all rows from all uploaded files into one unified master dataset.
+
+• Remove ALL duplicates using:
+  - CompanyName (fuzzy match allowed)
+  - Phone
+  - Address
+  - Website
+
+• Normalize addresses to USPS standards.
+• Validate phone and email formatting.
+
+• Tag each lead with a Segment value such as:
+  - RegionalChain
+  - ArtisanHighEnd
+
+• Enrich leads when publicly available information exists:
+  - Owner
+  - Buyer / Procurement
+  - Head Baker
+  - Main contact email/phone
+
+• Create a unique LeadId for each row in this format:
+  YSMC-{YYYYMMDD}-{sequence}
+
+Final Output:
+Produce a downloadable CSV file named:
+Cleaned_Bakery_Leads_<TargetLocation>.csv
+
+Use EXACT headers in this order:
+LeadId, CompanyName, Segment, ContactName, Phone, Email, Website,
+Address, City, State, PostalCode, Country
+
+In your response:
+• First, output ONLY the final CSV inside a ```csv code block.
+• Include ONE short sentence telling the user here are the merged leads
+• Include ONE short sentence telling the user they can open it in Excel or upload it to Google Sheets to view and edit it.
+• Display this link exactly as written:
+  https://sheets.google.com/
+
+Do not include any other explanations or commentary.
+
+==============================================================
+IF Language = "ES" — DISPLAY THIS VERSION TO THE USER
+==============================================================
+
+Eres un asistente de limpieza y fusión de datos.
+
+Voy a cargar múltiples archivos CSV al mismo tiempo. La cantidad de archivos puede variar y sus nombres también pueden variar.
+
+Tus tareas:
+
+• Detectar TODOS los archivos CSV cargados.
+• Leer simultáneamente cada archivo CSV cargado.
+• Fusionar todas las filas de todos los archivos en un único conjunto maestro de datos.
+
+• Eliminar TODOS los duplicados usando:
+  - NombreEmpresa (se permite coincidencia difusa)
+  - Telefono
+  - Direccion
+  - SitioWeb
+
+• Normalizar las direcciones según los estándares USPS.
+• Validar el formato de teléfono y correo electrónico.
+
+• Etiquetar cada lead con un valor Segment, por ejemplo:
+  - RegionalChain
+  - ArtisanHighEnd
+
+• Enriquecer los leads cuando exista información pública disponible:
+  - Propietario
+  - Comprador / Compras
+  - Jefe de Panadería
+  - Correo/Teléfono principal del contacto
+
+• Crear un LeadId único para cada fila con este formato:
+  YSMC-{YYYYMMDD}-{sequence}
+
+Salida final:
+Genera un archivo CSV descargable llamado:
+Cleaned_Bakery_Leads_<TargetLocation>.csv
+
+Usa EXACTAMENTE estos encabezados en este orden:
+LeadId, NombreEmpresa, Segmento, PersonaContacto, Telefono, Correo, SitioWeb,
+Direccion, Ciudad, Estado, CodigoPostal, Pais
+
+En tu respuesta:
+• Primero, muestra ÚNICAMENTE el CSV final dentro de un bloque ```csv.
+• Incluye UNA oración corta indicando que aquí están los leads fusionados.
+• Incluye UNA oración corta indicando que el usuario puede abrir el archivo en Excel o cargarlo en Google Sheets para verlo y editarlo.
+• Muestra este enlace exactamente como está escrito:
+  https://sheets.google.com/
+
+No incluyas ninguna otra explicación ni comentario.

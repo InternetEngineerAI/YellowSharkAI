@@ -15,24 +15,39 @@
       "Email",
       "Website"
     ],
+    "headers_es": [
+      "NombreEmpresa",
+      "PersonaContacto",
+      "Direccion",
+      "Ciudad",
+      "Estado",
+      "CodigoPostal",
+      "Pais",
+      "Telefono",
+      "Correo",
+      "SitioWeb"
+    ],
     "platforms": [
       {
         "id": "gemini",
         "name": "Gemini",
         "link": "https://gemini.google.com/",
-        "prompt_template": "Retrieve a list of Regional Chain Bakeries and Artisan/High-End Bakeries located in {{TargetLocation}}.\n\nInclude only bakeries that bake in-house and purchase flour by pallet or bulk.\nExclude supermarkets, cafés, and national chains.\n\nFor each bakery, provide:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nData Integrity Rule:\n- For proprietary fields (Owner/Contact Person and Email), leave blank if not publicly available.\n- For public-facing fields (Address, Phone Number, Website), perform a reasonable targeted web search to locate and fill these fields; do not leave blank if easily verifiable.\n\nFinal, Critical Step (must be executed last):\nReturn the data ONLY as raw CSV text — no markdown tables, no summaries, no explanations — using these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website\n"
+        "prompt_template": "Retrieve a list of Regional Chain Bakeries and Artisan/High-End Bakeries located in {{TargetLocation}}.\n\nInclude only bakeries that bake in-house and purchase flour by pallet or bulk.\nExclude supermarkets, cafés, and national chains.\n\nFor each bakery, provide:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nData Integrity Rule:\n- For proprietary fields (Owner/Contact Person and Email), leave blank if not publicly available.\n- For public-facing fields (Address, Phone Number, Website), perform a reasonable targeted web search to locate and fill these fields; do not leave blank if easily verifiable.\n\nFinal Output Requirements (MUST follow this exact sequence):\n1. First, output this exact sentence BEFORE the code block:\nHere are the leads for {{TargetLocation}} market\n\n2. Immediately after that sentence, output ONLY the raw CSV data inside a ```csv code block.\n3. Use exactly these headers in this order:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website\n\nRules:\n- No markdown tables\n- No summaries or commentary\n- No text after the code block\n- The CSV must be UTF-8 plain text\n- Include ONE short sentence telling the user they need to save the results using notepad before merging back in Gemini\n",
+        "prompt_template_es": "Recupera una lista de Panaderías de Cadenas Regionales y Panaderías Artesanales / de Alta Gama ubicadas en {{TargetLocation}}.\n\nIncluye únicamente panaderías que horneen en sus propias instalaciones y compren harina por paleta o a granel.\nExcluye supermercados, cafés y cadenas nacionales.\n\nPara cada panadería, proporciona:\n- Nombre de la empresa\n- Persona de contacto o propietario (si está disponible)\n- Dirección, ciudad, estado, código postal y país\n- Número de teléfono\n- Correo electrónico (si está disponible)\n- Sitio web (si está disponible)\n\nRegla de integridad de datos:\n- Para los campos propietarios (propietario/persona de contacto y correo electrónico), déjalos en blanco si la información no es pública.\n- Para los campos de cara al público (dirección, número de teléfono, sitio web), realiza una búsqueda web dirigida para localizar y completar estos campos; no los dejes en blanco si son fácilmente verificables.\n\nRequisitos del resultado final (DEBES seguir exactamente esta secuencia):\n1. Primero, muestra esta frase EXACTA ANTES del bloque de código:\nAquí están los leads para el mercado de {{TargetLocation}}\n\n2. Inmediatamente después de esa frase, muestra ÚNICAMENTE los datos CSV en bruto dentro de un bloque ```csv.\n3. Usa exactamente estos encabezados en este orden:\n NombreEmpresa, PersonaContacto, Direccion, Ciudad, Estado, CodigoPostal, Pais, Telefono, Correo, SitioWeb\n\nReglas:\n- No uses tablas markdown\n- No incluyas resúmenes ni comentarios\n- No añadas texto después del bloque de código\n- El CSV debe ser texto plano en UTF-8\n"
       },
       {
         "id": "copilot",
         "name": "Copilot",
         "link": "https://copilot.microsoft.com/",
-        "prompt_template": "Search for bakeries in {{TargetLocation}} that meet these criteria:\n\n- Regional Chain (5–100 locations) or Artisan/High-End\n- Bakes in-house\nExclude grocery stores, cafés, and nationwide franchises.\n\nFor each bakery, include:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nData Quality Requirement:\nIf the phone number or primary address is missing, perform a targeted web search to complete those fields before finalizing the table.\n\nFinal, Critical Step (must be executed last):\nReturn the results ONLY as plain CSV text — no markdown formatting, no commentary — using these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website\n"
+        "prompt_template": "Search for bakeries in {{TargetLocation}} that meet these criteria:\n\n- Regional Chain (5–100 locations) or Artisan/High-End\n- Bakes in-house\nExclude grocery stores, cafés, and nationwide franchises.\n\nFor each bakery, include:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nData Quality Requirement:\nIf the phone number or primary address is missing, perform a targeted web search to complete those fields before finalizing the table.\n\nFinal Output Requirements (MUST follow this exact sequence):\n1. First, output this exact sentence BEFORE the code block:\nHere are the leads for {{TargetLocation}} market\n\n2. Immediately after that sentence, output ONLY the raw CSV data inside a ```csv code block.\n3. Use exactly these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website\n\nRules:\n- No markdown tables\n- No summaries or commentary\n- No text after the code block\n",
+        "prompt_template_es": "Busca panaderías en {{TargetLocation}} que cumplan estos criterios:\n\n- Cadena regional (5–100 locales) o Artesanal / de Alta Gama\n- Hornean en sus propias instalaciones\nExcluye supermercados, cafés y franquicias nacionales.\n\nPara cada panadería, incluye:\n- Nombre de la empresa\n- Persona de contacto o propietario (si está disponible)\n- Dirección, ciudad, estado, código postal y país\n- Número de teléfono\n- Correo electrónico (si está disponible)\n- Sitio web (si está disponible)\n\nRequisito de calidad de datos:\nSi falta el número de teléfono o la dirección principal, realiza una búsqueda web dirigida para completar esos campos antes de finalizar la tabla.\n\nRequisitos del resultado final (DEBES seguir exactamente esta secuencia):\n1. Primero, muestra esta frase EXACTA ANTES del bloque de código:\nAquí están los leads para el mercado de {{TargetLocation}}\n\n2. Inmediatamente después de esa frase, muestra ÚNICAMENTE los datos CSV en bruto dentro de un bloque ```csv.\n3. Usa exactamente estos encabezados:\n NombreEmpresa, PersonaContacto, Direccion, Ciudad, Estado, CodigoPostal, Pais, Telefono, Correo, SitioWeb\n\nReglas:\n- No uses tablas markdown\n- No incluyas resúmenes ni comentarios\n- No añadas texto después del bloque de código\n"
       },
       {
         "id": "grok",
         "name": "Grok",
         "link": "https://grok.com/",
-        "prompt_template": "List all Regional Chain and Artisan/High-End Bakeries in {{TargetLocation}}.\n\nInclude for each:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nData Completeness Rule:\nIf the phone number or primary address is missing, perform an additional targeted search to locate and fill those fields before finalizing the table.\n\nFinal, Critical Step (must be executed last):\nReturn the data ONLY as raw CSV text (NO markdown tables, NO explanations) using these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website\n"
+        "prompt_template": "List all Regional Chain and Artisan/High-End Bakeries in {{TargetLocation}}.\n\nInclude for each:\n- Company name\n- Contact person or owner (if available)\n- Address, city, state, postal code, and country\n- Phone number\n- Email (if available)\n- Website (if available)\n\nData Completeness Rule:\nIf the phone number or primary address is missing, perform an additional targeted search to locate and fill those fields before finalizing the table.\n\nFinal Output Requirements (MUST follow this exact sequence):\n1. First, output this exact sentence BEFORE the code block:\nHere are the leads for {{TargetLocation}} market\n\n2. Immediately after that sentence, output ONLY the raw CSV data inside a ```csv code block.\n3. Use exactly these headers:\nCompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website\n\nRules:\n- NO markdown tables\n- NO explanations\n- NO text after the code block\n",
+        "prompt_template_es": "Enumera todas las Panaderías de Cadenas Regionales y Panaderías Artesanales / de Alta Gama en {{TargetLocation}}.\n\nIncluye para cada una:\n- Nombre de la empresa\n- Persona de contacto o propietario (si está disponible)\n- Dirección, ciudad, estado, código postal y país\n- Número de teléfono\n- Correo electrónico (si está disponible)\n- Sitio web (si está disponible)\n\nRegla de completitud de datos:\nSi falta el número de teléfono o la dirección principal, realiza una búsqueda dirigida adicional para localizar y completar esos campos antes de finalizar la tabla.\n\nRequisitos del resultado final (DEBES seguir exactamente esta secuencia):\n1. Primero, muestra esta frase EXACTA ANTES del bloque de código:\nAquí están los leads para el mercado de {{TargetLocation}}\n\n2. Inmediatamente después de esa frase, muestra ÚNICAMENTE los datos CSV en bruto dentro de un bloque ```csv.\n3. Usa exactamente estos encabezados:\n NombreEmpresa, PersonaContacto, Direccion, Ciudad, Estado, CodigoPostal, Pais, Telefono, Correo, SitioWeb\n\nReglas:\n- NO uses tablas markdown\n- NO des explicaciones\n- NO añadas texto después del bloque de código\n"
       }
     ]
   },
@@ -63,6 +78,32 @@
         "GoogleMapsLink",
         "WalkOrder",
         "DistanceFromPrevMeters"
+      ],
+      "headers_es": [
+        "LeadId",
+        "NombreEmpresa",
+        "Segmento",
+        "ConteoUbicaciones",
+        "ContactoNombre",
+        "ContactoApellido",
+        "Titulo",
+        "Telefono",
+        "TelefonoAlt",
+        "Correo",
+        "SitioWeb",
+        "Direccion",
+        "Ciudad",
+        "Estado",
+        "CodigoPostal",
+        "Pais",
+        "ZonaHoraria",
+        "DNCFlag",
+        "Notas",
+        "Latitud",
+        "Longitud",
+        "GoogleMapsLink",
+        "OrdenCaminata",
+        "DistanciaDesdePrevioMetros"
       ]
     },
     "dialers": {
@@ -78,6 +119,20 @@
           "zip",
           "country",
           "notes",
+          "custom_1",
+          "custom_2"
+        ],
+        "headers_es": [
+          "numero",
+          "nombre",
+          "empresa",
+          "correo",
+          "direccion",
+          "ciudad",
+          "estado",
+          "codigo_postal",
+          "pais",
+          "notas",
           "custom_1",
           "custom_2"
         ],
@@ -110,6 +165,19 @@
           "list_name",
           "notes"
         ],
+        "headers_es": [
+          "telefono",
+          "nombre",
+          "apellido",
+          "empresa",
+          "direccion",
+          "ciudad",
+          "estado",
+          "codigo_postal",
+          "pais",
+          "lista",
+          "notas"
+        ],
         "map": {
           "phone": "Phone",
           "first_name": "ContactFirst",
@@ -140,6 +208,22 @@
           "timezone",
           "notes",
           "external_id"
+        ],
+        "headers_es": [
+          "telefono",
+          "empresa",
+          "nombre",
+          "apellido",
+          "titulo",
+          "correo",
+          "direccion",
+          "ciudad",
+          "estado",
+          "codigo_postal",
+          "pais",
+          "zona_horaria",
+          "notas",
+          "id_externo"
         ],
         "map": {
           "phone": "Phone",
@@ -174,9 +258,27 @@
         "PostalCode",
         "Country"
       ],
+      "headers_es": [
+        "LeadId",
+        "NombreEmpresa",
+        "Segmento",
+        "NombreContacto",
+        "Telefono",
+        "Correo",
+        "SitioWeb",
+        "Direccion",
+        "Ciudad",
+        "Estado",
+        "CodigoPostal",
+        "Pais"
+      ],
       "instructions": [
         "Go to https://www.geocod.io and select USPS ZIP+4 to get Latitude and Longitude for each address.",
         "Once Latitude and Longitude are added by Geocodio, import the updated CSV into Gemini and prompt: Create a multi-stop route optimized for shortest travel distance."
+      ],
+      "instructions_es": [
+        "Ve a https://www.geocod.io y selecciona USPS ZIP+4 para obtener la Latitud y la Longitud de cada dirección.",
+        "Una vez que Geocodio agregue la Latitud y la Longitud, importa el CSV actualizado en Gemini y usa el siguiente prompt: Crea una ruta con múltiples paradas optimizada para la distancia más corta."
       ]
     }
   },

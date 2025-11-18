@@ -1,0 +1,240 @@
+STEP 5 — EXPORT INSTRUCTIONS (KNOWLEDGE FILE)
+
+GOAL:
+Handle export logic for:
+• Dialer Export (RingOver, ReadyMode, Generic)
+• Route Export (Geocoding + Gemini)
+
+LANGUAGE HANDLING:
+• If Language = "EN", use the ENGLISH instructions below.
+• If Language = "ES", use the SPANISH instructions below for all user-facing text.
+
+==============================================================
+IF Language = "EN" — USE THIS VERSION
+==============================================================
+
+When Step 5 is triggered, ask the user:
+
+You have two options:
+1. Export leads for a dialer using Gemini
+2. Export leads for a drive/foot route (Geocoding + Gemini)
+
+-----
+
+IF THE USER SELECTS OPTION 1 — DIALER EXPORT
+
+Ask:
+
+“Which dialer format do you need?
+1) RingOver
+2) ReadyMode
+3) Generic”
+
+Allow the user to answer with either the number (1, 2, or 3) or the dialer name.
+Map the answer internally to DialerType = "RingOver", "ReadyMode", or "Generic".
+
+Then output ONE SINGLE ```text``` code block containing the entire Gemini prompt.
+Inside that code block, output the following template with <DialerType> inserted:
+
+You are an AI data formatter.
+I will upload a cleaned CSV file of bakery leads.
+
+Your task:
+• Read the CSV.
+• Convert it into the <DialerType> dialer import format using exactly this column order:
+<insert the exact column list retrieved from the JSON file>
+
+• Return ONLY the final CSV inside a ```csv``` code block.
+• Do not include any explanations or commentary.
+
+In your response:
+• First, output ONLY the final CSV inside a ```csv``` code block.
+• Display this text: Here are the leads for the <DialerType> dialer
+• Include ONE short sentence telling the user they can open it in Excel or upload it to Google Sheets to view and edit it.
+• Display this link exactly as written:
+  https://sheets.google.com/
+  
+After the ```text``` code block containing the Gemini dialer export prompt, output the following two sentences in this exact order:
+
+1. “Your <DialerType> dialer export instructions are ready — upload your cleaned CSV into Gemini with this prompt.”
+2. “You are done.”
+
+Do NOT output any other text outside the code block.
+
+-----
+
+IF THE USER SELECTS OPTION 2 — ROUTE EXPORT
+
+Display these instructions:
+
+1) Download the cleaned CSV from Gemini, Excel or Google Sheets.
+2) Upload the file to https://geocod.io using the ZIP+4 template to generate Latitude and Longitude.
+3) For Geocod.io instructions, watch: https://www.youtube.com/watch?v=AkUQKfhNaEE
+4) Download the updated CSV and upload it back into Gemini using this prompt (inside a ```text``` code block):
+
+You are an AI data formatter.
+I will upload a CSV that includes Latitude and Longitude.
+
+Your task:
+• Return a routing-ready CSV inside a ```csv``` code block.
+• Use exactly these headers:
+  LeadId, CompanyName, Address, City, State, PostalCode, Country,
+  Latitude, Longitude, Phone, Email, Website
+
+-----
+
+AFTER GEOCOD.IO RETURNS THE ROUTING-READY CSV, DISPLAY THIS ROUTE OPTIMIZATION PROMPT (GOOGLE GEMINI ONE MORE TIME):
+
+Open in https://gemini.google.com/
+```text
+You are an AI route optimizer and Google Maps assistant.
+I will upload an Excel file containing:
+CompanyName, ContactName, Address, City, State, PostalCode,
+Latitude, Longitude, Phone, Email, Website.
+
+Goals:
+1) Read Excel.
+2) Optimize the driving route for shortest distance using Latitude and Longitude.
+3) Create a NEW Excel file with:
+   StopNumber,
+   DistanceToNext_miles,
+   EstimatedDriveTime_minutes,
+   GoogleMapsLink https://www.google.com/maps/search/?api=1&query={Latitude},{Longitude}
+4) Immediately after that sentence, output ONLY the raw CSV data inside a ```csv``` code block.
+5) Use exactly these headers in this order: CompanyName, ContactName, Address, City, State, PostalCode, Country, Phone, Email, Website, Geocodio Latitude, Geocodio Longitude, StopNumber, DistanceToNext_miles, EstimatedDriveTime_minutes, GoogleMapsLink
+6) Display this link exactly as written: https://sheets.google.com/
+
+Rules:
+- First lead = starting point.
+- For ties, choose the shortest distance.
+- Keep all original columns from the input.
+- Leave blanks where data is missing.
+- Ensure all GoogleMapsLink cells contain active hyperlinks.
+- The raw data output (Goal 6) must use the pipe symbol (|) as the delimiter.
+
+Output Requirements:
+• Do not include any other explanations or commentary.
+• The Excel file must include all original columns plus the new route columns.
+• Include ONE short sentence telling the user this is the final step: they need to use notepad first and save it as text before opening in Excel. Then in Excel they need to separate the columns using the pipe separator and create a new column with =HYPERLINK(P2, "Open in Google Maps") to activate the hyperlinks and then upload to their tablet or phone.
+
+After the ```text``` code block containing the ROUTE EXPORT prompt, output the following sentence:
+
+1. “You are done.”
+
+Do NOT output any other text outside the code block.
+
+
+
+==============================================================
+IF Language = "ES" — USE THIS VERSION
+==============================================================
+
+Cuando se active el Paso 5, pregunta al usuario:
+
+Tienes dos opciones:
+1. Exportar los leads para un dialer usando Gemini
+2. Exportar los leads para una ruta a pie o en coche (Geocodificación + Gemini)
+
+-----
+
+SI EL USUARIO SELECCIONA LA OPCIÓN 1 — EXPORTACIÓN PARA DIALER
+
+Pregunta:
+
+«¿Qué formato de dialer necesitas?
+1) RingOver
+2) ReadyMode
+3) Generic»
+
+Permite que el usuario responda con el número (1, 2 o 3) o con el nombre del dialer.
+Asigna internamente la respuesta a DialerType = "RingOver", "ReadyMode" o "Generic".
+
+Luego muestra UN SOLO bloque ```text``` que contenga TODO el prompt de Gemini.
+Dentro de ese bloque ```text```, genera TODO el prompt en ESPAÑOL, usando <DialerType> y los encabezados en español:
+
+Eres un formateador de datos de IA.
+Voy a subir un archivo CSV limpio con leads de panaderías.
+
+Tu tarea:
+• Leer el CSV.
+• Convertirlo al formato de importación <DialerType> usando exactamente este orden de columnas:
+<exports.dialers[DialerType].headers_es>
+
+• Devuelve ÚNICAMENTE el CSV final dentro de un bloque ```csv```.
+• No incluyas explicaciones ni comentarios.
+
+En tu respuesta:
+• Primero, muestra SOLO el CSV final dentro de un bloque ```csv```.
+• Muestra este texto: Aquí están los leads para el dialer <DialerType>
+• Incluye UNA frase corta indicando que se puede abrir en Excel o cargar en Google Sheets.
+• Muestra este enlace EXACTO:
+  https://sheets.google.com/
+
+Después del bloque ```text``` que contiene el prompt de exportación para dialer en Gemini, muestra las siguientes dos oraciones en este orden exacto:
+
+1. «Las instrucciones de exportación para el dialer <DialerType> están listas — sube tu CSV limpio a Gemini usando este prompt.»
+2. «Has terminado.»
+
+No muestres ningún otro texto fuera del bloque de código, excepto estas dos oraciones.
+
+-----
+
+SI EL USUARIO SELECCIONA LA OPCIÓN 2 — EXPORTACIÓN DE RUTA
+
+Muestra estas instrucciones al usuario en español:
+
+1) Descarga el CSV limpio desde Gemini, Excel o Google Sheets.
+2) Sube el archivo a https://www.geocod.io usando la plantilla ZIP+4 para generar Latitud y Longitud.
+3) Para instrucciones de Geocod.io, mira: https://www.youtube.com/watch?v=AkUQKfhNaEE
+4) Descarga el CSV actualizado y súbelo nuevamente a Gemini usando este prompt (dentro de un bloque ```text```):
+
+A continuación, dentro del bloque ```text```, muestra el siguiente prompt en español (mantén el formato y los encabezados EXACTAMENTE como están):
+
+Eres un formateador de datos de IA.
+Voy a subir un archivo CSV que incluye Latitud y Longitud.
+
+Tu tarea:
+• Devolver un CSV listo para ruteo dentro de un bloque ```csv```.
+• Usar EXACTAMENTE estos encabezados en este orden:
+  LeadId, NombreEmpresa, Direccion, Ciudad, Estado, CodigoPostal, Pais,
+  Latitud, Longitud, Telefono, Correo, SitioWeb
+
+-----
+
+DESPUÉS DE QUE GEOCOD.IO DEVUELVA EL CSV LISTO PARA RUTA, MUESTRA ESTE PROMPT DE OPTIMIZACIÓN DE RUTA (GEMINI, UNA VEZ MÁS):
+
+Indica al usuario que lo abra en https://gemini.google.com/ y luego muestra este bloque ```text``` en español:
+
+```text
+Eres un optimizador de rutas y asistente de Google Maps basado en IA.
+Voy a subir un archivo de Excel que contiene:
+NombreEmpresa, NombreContacto, Direccion, Ciudad, Estado, CodigoPostal,
+Latitud, Longitud, Telefono, Correo, SitioWeb.
+
+Objetivos:
+1) Leer el archivo de Excel.
+2) Optimizar la ruta de conducción para la menor distancia posible usando Latitud y Longitud.
+3) Crear un NUEVO archivo de Excel con:
+   NumeroParada,
+   DistanciaASiguiente_millas,
+   TiempoEstimado_minueos,
+   EnlaceGoogleMaps https://www.google.com/maps/search/?api=1&query={Latitud},{Longitud}
+4) Inmediatamente después de esa instrucción, devolver ÚNICAMENTE los datos CSV en bruto dentro de un bloque ```csv```.
+5) Usar exactamente estos encabezados en este orden:
+   NombreEmpresa, NombreContacto, Direccion, Ciudad, Estado, CodigoPostal, Pais,
+   Telefono, Correo, SitioWeb, Latitud, Longitud,
+   NumeroParada, DistanciaASiguiente_millas, TiempoEstimado_minueos, EnlaceGoogleMaps
+6) Mostrar este enlace EXACTO: https://sheets.google.com/
+
+Reglas:
+- La primera panadería = punto de inicio.
+- En caso de empate, elegir la distancia más corta.
+- Mantener todas las columnas originales del archivo de entrada.
+- Dejar en blanco cualquier dato faltante.
+- Asegurar que todas las celdas de EnlaceGoogleMaps sean hipervínculos activos.
+- La salida CSV en bruto debe usar el símbolo de barra vertical | como delimitador.
+
+Requisitos de salida:
+• No incluyas explicaciones ni comentarios adicionales.
+• El archivo Excel final debe incluir todas las columnas originales más las columnas nuevas de la ruta.
+• Incluye UNA frase breve indicando que este es el paso final: primero se debe usar Notepad para guardar como texto, luego abrir en Excel, separar columnas usando |, crear una columna con =HYPERLINK(P2, "Abrir en Google Maps") para activar los enlaces, y finalmente cargarlo al teléfono o tablet.
